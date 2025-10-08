@@ -1,4 +1,4 @@
-const isAdmin = (req, res, next) => {
+const isAdmin = async (req, res, next) => {
   try {
     if (!req.user) {
       return res.status(401).json({
@@ -8,7 +8,11 @@ const isAdmin = (req, res, next) => {
       });
     }
 
-    if (req.user.role !== "admin") {
+    if (!req.user.role.name) {
+      await req.user.populate("role");
+    }
+
+    if (req.user.role?.name !== "ADMIN") {
       return res.status(403).json({
         status: "error",
         message: "Acceso denegado. Se requiere rol de administrador",

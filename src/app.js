@@ -5,8 +5,11 @@ import helmet from "helmet";
 
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
+import roleRoutes from "./routes/role.routes.js";
+import permissionRoutes from "./routes/permission.routes.js";
 import notFound from "./middlewares/notFound.js";
 
+// Express
 const app = express();
 
 // Middlewares
@@ -19,6 +22,8 @@ app.use(helmet());
 // Rutas
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/roles", roleRoutes);
+app.use("/api/permissions", permissionRoutes);
 app.use(notFound);
 
 export default app;

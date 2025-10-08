@@ -1,8 +1,12 @@
 import User from "../models/User.js";
+import Role from "../models/Role.js";
 
+// Obtener el perfil del usuario autenticado
 export const getMyProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id).select("-password");
+    const user = await User.findById(req.user._id)
+      .select("-password")
+      .populate("role");
 
     if (!user) {
       return res.status(404).json({
@@ -26,9 +30,13 @@ export const getMyProfile = async (req, res) => {
   }
 };
 
+// Obtener todos los usuarios
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find().select("-password").populate({
+      path: "role",
+      select: "-permissions",
+    });
     return res.status(200).json({
       status: "success",
       message: "Usuarios obtenidos correctamente",
@@ -43,9 +51,12 @@ export const getUsers = async (req, res) => {
   }
 };
 
+// Obtener un usuario por ID
 export const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findById(req.params.id)
+      .select("-password")
+      .populate("role");
 
     if (!user) {
       return res.status(404).json({
@@ -69,6 +80,7 @@ export const getUserById = async (req, res) => {
   }
 };
 
+// Actualizar un usuario por ID
 export const updateUser = async (req, res) => {
   try {
     const { username, email } = req.body;
@@ -117,6 +129,7 @@ export const updateUser = async (req, res) => {
     if (email) user.email = email;
 
     await user.save();
+    await user.populate("role");
 
     res.status(200).json({
       status: "success",
@@ -132,6 +145,7 @@ export const updateUser = async (req, res) => {
   }
 };
 
+// Eliminar un usuario por ID
 export const deleteUser = async (req, res) => {
   try {
     const deleted = await User.findByIdAndDelete(req.params.id);
@@ -157,22 +171,24 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+// Actualizar el rol de un usuario por ID
 export const updateUserRole = async (req, res) => {
   try {
-    const { role } = req.body;
+    const { roleName } = req.body;
 
-    if (!role) {
+    if (!roleName) {
       return res.status(400).json({
         status: "error",
-        message: "El campo 'role' es obligatorio",
+        message: "El campo 'roleName' es obligatorio",
         payload: null,
       });
     }
 
-    if (role !== "user" && role !== "admin") {
-      return res.status(400).json({
+    const role = await Role.findOne({ name: roleName.toUpperCase() });
+    if (!role) {
+      return res.status(404).json({
         status: "error",
-        message: "El rol debe ser 'user' o 'admin'",
+        message: `El rol '${roleName}' no existe`,
         payload: null,
       });
     }
@@ -186,12 +202,13 @@ export const updateUserRole = async (req, res) => {
       });
     }
 
-    user.role = role;
+    user.role = role._id;
     await user.save();
+    await user.populate("role");
 
     return res.status(200).json({
       status: "success",
-      message: `Rol actualizado a '${role}' correctamente`,
+      message: `Rol actualizado a '${role.name}' correctamente`,
       payload: { user },
     });
   } catch (error) {

@@ -1,6 +1,8 @@
 import User from "../models/User.js";
+import Role from "../models/Role.js";
 import generateToken from "../utils/generateToken.js";
 
+// Registrar un nuevo usuario
 export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -38,7 +40,23 @@ export const register = async (req, res) => {
       });
     }
 
-    const user = await User.create({ username, email, password });
+    const userRole = await Role.findOne({ name: "USER" });
+    if (!userRole) {
+      return res.status(500).json({
+        status: "error",
+        message: "Error: No existe el rol USER en la base de datos",
+        payload: null,
+      });
+    }
+
+    const user = await User.create({
+      username,
+      email,
+      password,
+      role: userRole,
+    });
+
+    await user.populate("role");
 
     return res.status(201).json({
       status: "success",
@@ -48,7 +66,7 @@ export const register = async (req, res) => {
           id: user._id,
           username: user.username,
           email: user.email,
-          role: user.role,
+          role: user.role.name,
         },
         token: generateToken(user._id),
       },
@@ -62,6 +80,7 @@ export const register = async (req, res) => {
   }
 };
 
+// Iniciar sesión
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -74,7 +93,7 @@ export const login = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("role");
     if (!user) {
       return res.status(404).json({
         status: "error",
@@ -101,7 +120,7 @@ export const login = async (req, res) => {
           id: user._id,
           username: user.username,
           email: user.email,
-          role: user.role,
+          role: user.role.name,
         },
       },
     });
@@ -114,6 +133,7 @@ export const login = async (req, res) => {
   }
 };
 
+// Cerrar sesión (logout)
 export const logout = async (req, res) => {
   return res.status(200).json({
     status: "success",
@@ -122,6 +142,7 @@ export const logout = async (req, res) => {
   });
 };
 
+// Cambiar la contraseña del usuario autenticado
 export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;

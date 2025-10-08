@@ -10,7 +10,7 @@ const checkOwnerOrAdmin = (req, res, next) => {
 
     const userId = req.params.id;
     const currentUserId = req.user._id.toString();
-    const isAdmin = req.user.role === "admin";
+    const isAdmin = req.user.role?.name === "ADMIN";
 
     if (isAdmin || currentUserId === userId) {
       return next();
