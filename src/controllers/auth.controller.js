@@ -1,8 +1,8 @@
 import User from "../models/User.js";
 import Role from "../models/Role.js";
 import generateToken from "../utils/generateToken.js";
+import logger from "../config/logger.js";
 
-// Registrar un nuevo usuario
 export const register = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -72,6 +72,7 @@ export const register = async (req, res) => {
       },
     });
   } catch (error) {
+    logger.error("Error al registrar usuario", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al registrar usuario",
@@ -80,7 +81,6 @@ export const register = async (req, res) => {
   }
 };
 
-// Iniciar sesión
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -125,6 +125,7 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
+    logger.error("Error al iniciar sesión", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al iniciar sesión",
@@ -133,7 +134,6 @@ export const login = async (req, res) => {
   }
 };
 
-// Cerrar sesión (logout)
 export const logout = async (req, res) => {
   return res.status(200).json({
     status: "success",
@@ -142,7 +142,6 @@ export const logout = async (req, res) => {
   });
 };
 
-// Cambiar la contraseña del usuario autenticado
 export const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
@@ -183,6 +182,7 @@ export const changePassword = async (req, res) => {
       payload: null,
     });
   } catch (error) {
+    logger.error("Error al cambiar la contraseña", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al cambiar la contraseña",

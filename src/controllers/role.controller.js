@@ -1,7 +1,7 @@
 import Role from "../models/Role.js";
 import Permission from "../models/Permission.js";
+import logger from "../config/logger.js";
 
-// Obtener todos los roles
 export const getRoles = async (req, res) => {
   try {
     const roles = await Role.find();
@@ -12,6 +12,7 @@ export const getRoles = async (req, res) => {
       payload: { roles },
     });
   } catch (error) {
+    logger.error("Error al obtener roles", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al obtener roles",
@@ -20,7 +21,6 @@ export const getRoles = async (req, res) => {
   }
 };
 
-// Obtener un rol por ID
 export const getRoleById = async (req, res) => {
   try {
     const role = await Role.findById(req.params.id).populate("permissions");
@@ -39,6 +39,7 @@ export const getRoleById = async (req, res) => {
       payload: { role },
     });
   } catch (error) {
+    logger.error("Error al obtener rol", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al obtener rol",
@@ -47,7 +48,6 @@ export const getRoleById = async (req, res) => {
   }
 };
 
-// Crear un nuevo rol
 export const createRole = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -81,6 +81,7 @@ export const createRole = async (req, res) => {
       payload: { role },
     });
   } catch (error) {
+    logger.error("Error al crear rol", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al crear rol",
@@ -89,7 +90,6 @@ export const createRole = async (req, res) => {
   }
 };
 
-// Actualizar un rol por ID
 export const updateRole = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -142,6 +142,7 @@ export const updateRole = async (req, res) => {
       payload: { role },
     });
   } catch (error) {
+    logger.error("Error al actualizar rol", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al actualizar rol",
@@ -150,7 +151,6 @@ export const updateRole = async (req, res) => {
   }
 };
 
-// Eliminar un rol por ID
 export const deleteRole = async (req, res) => {
   try {
     const deleted = await Role.findByIdAndDelete(req.params.id);
@@ -169,6 +169,7 @@ export const deleteRole = async (req, res) => {
       payload: null,
     });
   } catch (error) {
+    logger.error("Error al eliminar rol", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al eliminar rol",
@@ -177,7 +178,6 @@ export const deleteRole = async (req, res) => {
   }
 };
 
-// Asignar permisos a un rol
 export const assignPermissions = async (req, res) => {
   try {
     const { permissions } = req.body;
@@ -221,6 +221,7 @@ export const assignPermissions = async (req, res) => {
       payload: { role },
     });
   } catch (error) {
+    logger.error("Error al asignar permisos", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al asignar permisos",

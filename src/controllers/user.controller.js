@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import Role from "../models/Role.js";
+import logger from "../config/logger.js";
 
-// Obtener el perfil del usuario autenticado
 export const getMyProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
@@ -22,6 +22,7 @@ export const getMyProfile = async (req, res) => {
       payload: { user },
     });
   } catch (error) {
+    logger.error("Error al obtener perfil", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al obtener perfil",
@@ -30,7 +31,6 @@ export const getMyProfile = async (req, res) => {
   }
 };
 
-// Obtener todos los usuarios
 export const getUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password").populate({
@@ -43,6 +43,7 @@ export const getUsers = async (req, res) => {
       payload: { users },
     });
   } catch (error) {
+    logger.error("Error al obtener usuarios", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al obtener usuarios",
@@ -51,7 +52,6 @@ export const getUsers = async (req, res) => {
   }
 };
 
-// Obtener un usuario por ID
 export const getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
@@ -72,6 +72,7 @@ export const getUserById = async (req, res) => {
       payload: { user },
     });
   } catch (error) {
+    logger.error("Error al obtener usuario", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al obtener usuario",
@@ -80,7 +81,6 @@ export const getUserById = async (req, res) => {
   }
 };
 
-// Actualizar un usuario por ID
 export const updateUser = async (req, res) => {
   try {
     const { username, email } = req.body;
@@ -137,6 +137,7 @@ export const updateUser = async (req, res) => {
       payload: user,
     });
   } catch (err) {
+    logger.error("Error al actualizar usuario", { message: err.message });
     res.status(500).json({
       status: "error",
       message: "Error al actualizar usuario",
@@ -145,7 +146,6 @@ export const updateUser = async (req, res) => {
   }
 };
 
-// Eliminar un usuario por ID
 export const deleteUser = async (req, res) => {
   try {
     const deleted = await User.findByIdAndDelete(req.params.id);
@@ -163,6 +163,7 @@ export const deleteUser = async (req, res) => {
       payload: null,
     });
   } catch (error) {
+    logger.error("Error al eliminar usuario", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al eliminar usuario",
@@ -171,7 +172,6 @@ export const deleteUser = async (req, res) => {
   }
 };
 
-// Actualizar el rol de un usuario por ID
 export const updateUserRole = async (req, res) => {
   try {
     const { roleName } = req.body;
@@ -212,6 +212,9 @@ export const updateUserRole = async (req, res) => {
       payload: { user },
     });
   } catch (error) {
+    logger.error("Error al actualizar el rol del usuario", {
+      message: error.message,
+    });
     res.status(500).json({
       status: "error",
       message: "Error al actualizar el rol del usuario",

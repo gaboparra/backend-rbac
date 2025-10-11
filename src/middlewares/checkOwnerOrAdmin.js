@@ -1,3 +1,5 @@
+import logger from "../config/logger.js";
+
 const checkOwnerOrAdmin = (req, res, next) => {
   try {
     if (!req.user) {
@@ -22,6 +24,7 @@ const checkOwnerOrAdmin = (req, res, next) => {
       payload: null,
     });
   } catch (error) {
+    logger.error("Error al verificar permisos", { message: error.message });
     return res.status(500).json({
       status: "error",
       message: "Error al verificar permisos",

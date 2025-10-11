@@ -1,3 +1,5 @@
+import logger from "../config/logger.js";
+
 const isAdmin = async (req, res, next) => {
   try {
     if (!req.user) {
@@ -22,6 +24,9 @@ const isAdmin = async (req, res, next) => {
 
     next();
   } catch (error) {
+    logger.error("Error al verificar permisos de administrador", {
+      message: error.message,
+    });
     return res.status(500).json({
       status: "error",
       message: "Error al verificar permisos de administrador",

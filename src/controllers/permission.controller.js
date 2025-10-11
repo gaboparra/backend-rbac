@@ -1,6 +1,6 @@
 import Permission from "../models/Permission.js";
+import logger from "../config/logger.js";
 
-// Obtener todos los permisos
 export const getPermissions = async (req, res) => {
   try {
     const permissions = await Permission.find();
@@ -11,6 +11,7 @@ export const getPermissions = async (req, res) => {
       payload: { permissions },
     });
   } catch (error) {
+    logger.error("Error al obtener permisos", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al obtener permisos",
@@ -19,7 +20,6 @@ export const getPermissions = async (req, res) => {
   }
 };
 
-// Obtener un permiso por ID
 export const getPermissionById = async (req, res) => {
   try {
     const permission = await Permission.findById(req.params.id);
@@ -38,6 +38,7 @@ export const getPermissionById = async (req, res) => {
       payload: { permission },
     });
   } catch (error) {
+    logger.error("Error al obtener permiso", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al obtener permiso",
@@ -46,7 +47,6 @@ export const getPermissionById = async (req, res) => {
   }
 };
 
-// Crear un nuevo permiso
 export const createPermission = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -77,6 +77,7 @@ export const createPermission = async (req, res) => {
       payload: { permission },
     });
   } catch (error) {
+    logger.error("Error al crear permiso", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al crear permiso",
@@ -85,7 +86,6 @@ export const createPermission = async (req, res) => {
   }
 };
 
-// Actualizar un permiso por ID
 export const updatePermission = async (req, res) => {
   try {
     const { name, description } = req.body;
@@ -137,6 +137,7 @@ export const updatePermission = async (req, res) => {
       payload: { permission },
     });
   } catch (error) {
+    logger.error("Error al actualizar permiso", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al actualizar permiso",
@@ -145,7 +146,6 @@ export const updatePermission = async (req, res) => {
   }
 };
 
-// Eliminar un permiso por ID
 export const deletePermission = async (req, res) => {
   try {
     const deleted = await Permission.findByIdAndDelete(req.params.id);
@@ -164,6 +164,7 @@ export const deletePermission = async (req, res) => {
       payload: null,
     });
   } catch (error) {
+    logger.error("Error al eliminar permiso", { message: error.message });
     res.status(500).json({
       status: "error",
       message: "Error al eliminar permiso",

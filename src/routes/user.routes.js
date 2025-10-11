@@ -14,15 +14,10 @@ import checkOwnerOrAdmin from "../middlewares/checkOwnerOrAdmin.js";
 
 const router = Router();
 
-// Rutas personales
 router.get("/me", authorization, getMyProfile);
-
-// Rutas solo para administradores
 router.get("/", authorization, isAdmin, getUsers);
 router.get("/:id", authorization, isAdmin, getUserById);
 router.patch("/:id/role", authorization, isAdmin, updateUserRole);
-
-// Rutas accesibles por el propio usuario o un admin
 router.put("/:id", authorization, checkOwnerOrAdmin, updateUser);
 router.delete("/:id", authorization, checkOwnerOrAdmin, deleteUser);
 

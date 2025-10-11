@@ -11,7 +11,6 @@ import isAdmin from "../middlewares/isAdmin.js";
 
 const router = Router();
 
-// Rutas de permisos
 router.get("/", authorization, isAdmin, getPermissions);
 router.get("/:id", authorization, isAdmin, getPermissionById);
 router.post("/", authorization, isAdmin, createPermission);
