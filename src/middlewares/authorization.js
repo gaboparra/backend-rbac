@@ -18,7 +18,10 @@ const authorization = async (req, res, next) => {
 
     const user = await User.findById(decoded.id)
       .select("-password")
-      .populate("role");
+      .populate({
+        path: "role",
+        populate: { path: "permissions" },
+      });
 
     if (!user) {
       return res.status(404).json({

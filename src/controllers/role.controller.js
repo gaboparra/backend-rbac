@@ -211,20 +211,68 @@ export const assignPermissions = async (req, res) => {
       });
     }
 
-    role.permissions = permissions;
+    permissions.forEach((permId) => {
+      if (!role.permissions.includes(permId)) {
+        role.permissions.push(permId);
+      }
+    });
+
     await role.save();
     await role.populate("permissions");
 
     return res.status(200).json({
       status: "success",
-      message: "Permisos asignados correctamente",
+      message: "Permisos agregados correctamente",
       payload: { role },
     });
   } catch (error) {
-    logger.error("Error al asignar permisos", { message: error.message });
+    logger.error("Error al agregar permisos:", error);
     res.status(500).json({
       status: "error",
-      message: "Error al asignar permisos",
+      message: "Error al agregar permisos",
+      payload: { error: error.message },
+    });
+  }
+};
+
+export const unassignPermissions = async (req, res) => {
+  try {
+    const { permissions } = req.body;
+
+    if (!permissions || !Array.isArray(permissions)) {
+      return res.status(400).json({
+        status: "error",
+        message: "Debe proporcionar un array de IDs de permisos",
+        payload: null,
+      });
+    }
+
+    const role = await Role.findById(req.params.id);
+    if (!role) {
+      return res.status(404).json({
+        status: "error",
+        message: "Rol no encontrado",
+        payload: null,
+      });
+    }
+
+    role.permissions = role.permissions.filter(
+      (permId) => !permissions.includes(permId.toString())
+    );
+
+    await role.save();
+    await role.populate("permissions");
+
+    return res.status(200).json({
+      status: "success",
+      message: "Permisos removidos correctamente",
+      payload: { role },
+    });
+  } catch (error) {
+    logger.error("Error al remover permisos:", error);
+    res.status(500).json({
+      status: "error",
+      message: "Error al remover permisos",
       payload: { error: error.message },
     });
   }

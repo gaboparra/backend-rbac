@@ -7,14 +7,14 @@ import {
   deletePermission,
 } from "../controllers/permission.controller.js";
 import authorization from "../middlewares/authorization.js";
-import isAdmin from "../middlewares/isAdmin.js";
+import checkPermission from "../middlewares/checkPermission.js";
 
 const router = Router();
 
-router.get("/", authorization, isAdmin, getPermissions);
-router.get("/:id", authorization, isAdmin, getPermissionById);
-router.post("/", authorization, isAdmin, createPermission);
-router.put("/:id", authorization, isAdmin, updatePermission);
-router.delete("/:id", authorization, isAdmin, deletePermission);
+router.get("/", authorization, checkPermission("permissions:read"), getPermissions);
+router.get("/:id", authorization, checkPermission("permissions:read"), getPermissionById);
+router.post("/", authorization, checkPermission("permissions:create"), createPermission);
+router.put("/:id", authorization, checkPermission("permissions:update"), updatePermission);
+router.delete("/:id", authorization, checkPermission("permissions:delete"), deletePermission);
 
 export default router;
