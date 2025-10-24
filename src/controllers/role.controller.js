@@ -8,14 +8,14 @@ export const getRoles = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: "Roles obtenidos correctamente",
+      message: "Roles fetched successfully",
       payload: { roles },
     });
   } catch (error) {
-    logger.error("Error al obtener roles", { message: error.message });
+    logger.error("Error fetching roles", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al obtener roles",
+      message: "Error fetching roles",
       payload: { error: error.message },
     });
   }
@@ -28,21 +28,21 @@ export const getRoleById = async (req, res) => {
     if (!role) {
       return res.status(404).json({
         status: "error",
-        message: "Rol no encontrado",
+        message: "Role not found",
         payload: null,
       });
     }
 
     return res.status(200).json({
       status: "success",
-      message: "Rol obtenido correctamente",
+      message: "Role fetched successfully",
       payload: { role },
     });
   } catch (error) {
-    logger.error("Error al obtener rol", { message: error.message });
+    logger.error("Error fetching role", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al obtener rol",
+      message: "Error fetching role",
       payload: { error: error.message },
     });
   }
@@ -55,7 +55,7 @@ export const createRole = async (req, res) => {
     if (!name || !description) {
       return res.status(400).json({
         status: "error",
-        message: "Nombre y descripción son obligatorios",
+        message: "Name and description are required",
         payload: null,
       });
     }
@@ -64,7 +64,7 @@ export const createRole = async (req, res) => {
     if (existingRole) {
       return res.status(400).json({
         status: "error",
-        message: "El rol ya existe",
+        message: "Role already exists",
         payload: null,
       });
     }
@@ -77,14 +77,14 @@ export const createRole = async (req, res) => {
 
     return res.status(201).json({
       status: "success",
-      message: "Rol creado exitosamente",
+      message: "Role created successfully",
       payload: { role },
     });
   } catch (error) {
-    logger.error("Error al crear rol", { message: error.message });
+    logger.error("Error creating role", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al crear rol",
+      message: "Error creating role",
       payload: { error: error.message },
     });
   }
@@ -97,7 +97,7 @@ export const updateRole = async (req, res) => {
     if (name !== undefined && name.trim() === "") {
       return res.status(400).json({
         status: "error",
-        message: "El nombre no puede estar vacío",
+        message: "Name cannot be empty",
         payload: null,
       });
     }
@@ -105,7 +105,7 @@ export const updateRole = async (req, res) => {
     if (description !== undefined && description.trim() === "") {
       return res.status(400).json({
         status: "error",
-        message: "La descripción no puede estar vacía",
+        message: "Description cannot be empty",
         payload: null,
       });
     }
@@ -114,7 +114,7 @@ export const updateRole = async (req, res) => {
     if (!role) {
       return res.status(404).json({
         status: "error",
-        message: "Rol no encontrado",
+        message: "Role not found",
         payload: null,
       });
     }
@@ -124,7 +124,7 @@ export const updateRole = async (req, res) => {
       if (existingRole) {
         return res.status(400).json({
           status: "error",
-          message: "Ya existe un rol con ese nombre",
+          message: "A role with that name already exists",
           payload: null,
         });
       }
@@ -138,14 +138,14 @@ export const updateRole = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: "Rol actualizado correctamente",
+      message: "Role updated successfully",
       payload: { role },
     });
   } catch (error) {
-    logger.error("Error al actualizar rol", { message: error.message });
+    logger.error("Error updating role", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al actualizar rol",
+      message: "Error updating role",
       payload: { error: error.message },
     });
   }
@@ -158,21 +158,21 @@ export const deleteRole = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({
         status: "error",
-        message: "Rol no encontrado",
+        message: "Role not found",
         payload: null,
       });
     }
 
     return res.status(200).json({
       status: "success",
-      message: "Rol eliminado correctamente",
+      message: "Role deleted successfully",
       payload: null,
     });
   } catch (error) {
-    logger.error("Error al eliminar rol", { message: error.message });
+    logger.error("Error deleting role", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al eliminar rol",
+      message: "Error deleting role",
       payload: { error: error.message },
     });
   }
@@ -185,7 +185,7 @@ export const assignPermissions = async (req, res) => {
     if (!permissions || !Array.isArray(permissions)) {
       return res.status(400).json({
         status: "error",
-        message: "Debe proporcionar un array de IDs de permisos",
+        message: "You must provide an array of permission IDs",
         payload: null,
       });
     }
@@ -194,7 +194,7 @@ export const assignPermissions = async (req, res) => {
     if (!role) {
       return res.status(404).json({
         status: "error",
-        message: "Rol no encontrado",
+        message: "Role not found",
         payload: null,
       });
     }
@@ -206,7 +206,7 @@ export const assignPermissions = async (req, res) => {
     if (foundPermissions.length !== permissions.length) {
       return res.status(400).json({
         status: "error",
-        message: "Algunos permisos no existen",
+        message: "Some permissions do not exist",
         payload: null,
       });
     }
@@ -222,14 +222,14 @@ export const assignPermissions = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: "Permisos agregados correctamente",
+      message: "Permissions added successfully",
       payload: { role },
     });
   } catch (error) {
-    logger.error("Error al agregar permisos:", error);
+    logger.error("Error adding permissions:", error);
     res.status(500).json({
       status: "error",
-      message: "Error al agregar permisos",
+      message: "Error adding permissions",
       payload: { error: error.message },
     });
   }
@@ -242,7 +242,7 @@ export const unassignPermissions = async (req, res) => {
     if (!permissions || !Array.isArray(permissions)) {
       return res.status(400).json({
         status: "error",
-        message: "Debe proporcionar un array de IDs de permisos",
+        message: "You must provide an array of permission IDs",
         payload: null,
       });
     }
@@ -251,7 +251,7 @@ export const unassignPermissions = async (req, res) => {
     if (!role) {
       return res.status(404).json({
         status: "error",
-        message: "Rol no encontrado",
+        message: "Role not found",
         payload: null,
       });
     }
@@ -265,14 +265,14 @@ export const unassignPermissions = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: "Permisos removidos correctamente",
+      message: "Permissions removed successfully",
       payload: { role },
     });
   } catch (error) {
-    logger.error("Error al remover permisos:", error);
+    logger.error("Error removing permissions:", error);
     res.status(500).json({
       status: "error",
-      message: "Error al remover permisos",
+      message: "Error removing permissions",
       payload: { error: error.message },
     });
   }

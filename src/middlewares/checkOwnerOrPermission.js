@@ -6,7 +6,7 @@ const checkOwnerOrPermission = (requiredPermission) => {
       if (!req.user) {
         return res.status(401).json({
           status: "error",
-          message: "Usuario no autenticado",
+          message: "User not authenticated",
           payload: null,
         });
       }
@@ -35,15 +35,14 @@ const checkOwnerOrPermission = (requiredPermission) => {
 
       return res.status(403).json({
         status: "error",
-        message: `No puedes modificar o eliminar a otro usuario sin permisos suficientes. 
-                  Necesitas el permiso: ${requiredPermission}`,
+        message: `You cannot modify or delete another user without sufficient permissions. You need the permission: ${requiredPermission}`,
         payload: null,
       });
     } catch (error) {
-      logger.error("Error al verificar permisos", { message: error.message });
+      logger.error("Error checking permissions", { message: error.message });
       return res.status(500).json({
         status: "error",
-        message: "Error al verificar permisos",
+        message: "Error checking permissions",
         payload: { error: error.message },
       });
     }

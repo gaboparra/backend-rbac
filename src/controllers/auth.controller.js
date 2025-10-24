@@ -10,7 +10,7 @@ export const register = async (req, res) => {
     if (!username || !email || !password) {
       return res.status(400).json({
         status: "error",
-        message: "Todos los campos son obligatorios",
+        message: "All fields are required",
         payload: null,
       });
     }
@@ -19,14 +19,14 @@ export const register = async (req, res) => {
     if (!emailRegex.test(email)) {
       return res.status(400).json({
         status: "error",
-        message: "Formato de email inválido",
+        message: "Invalid email format",
       });
     }
 
     if (password.length < 6) {
       return res.status(400).json({
         status: "error",
-        message: "La contraseña debe tener al menos 6 caracteres",
+        message: "Password must be at least 6 characters long",
         payload: null,
       });
     }
@@ -35,7 +35,7 @@ export const register = async (req, res) => {
     if (userExists) {
       return res.status(400).json({
         status: "error",
-        message: "El usuario ya existe",
+        message: "User already exists",
         payload: null,
       });
     }
@@ -44,7 +44,7 @@ export const register = async (req, res) => {
     if (!userRole) {
       return res.status(500).json({
         status: "error",
-        message: "Error: No existe el rol USER en la base de datos",
+        message: "Error: USER role does not exist in the database",
         payload: null,
       });
     }
@@ -60,7 +60,7 @@ export const register = async (req, res) => {
 
     return res.status(201).json({
       status: "success",
-      message: "Usuario registrado exitosamente",
+      message: "User registered successfully",
       payload: {
         user: {
           id: user._id,
@@ -72,10 +72,10 @@ export const register = async (req, res) => {
       },
     });
   } catch (error) {
-    logger.error("Error al registrar usuario", { message: error.message });
+    logger.error("Error registering user", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al registrar usuario",
+      message: "Error registering user",
       payload: { error: error.message },
     });
   }
@@ -88,7 +88,7 @@ export const login = async (req, res) => {
     if (!email || !password) {
       return res.status(400).json({
         status: "error",
-        message: "Email y contraseña son obligatorios",
+        message: "Email and password are required",
         payload: null,
       });
     }
@@ -97,7 +97,7 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: "error",
-        message: "Usuario no encontrado",
+        message: "User not found",
         payload: null,
       });
     }
@@ -106,14 +106,14 @@ export const login = async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({
         status: "error",
-        message: "Credenciales incorrectas",
+        message: "Invalid credentials",
         payload: null,
       });
     }
 
     return res.status(200).json({
       status: "success",
-      message: "Login exitoso",
+      message: "Login successful",
       payload: {
         token: generateToken(user._id),
         user: {
@@ -125,10 +125,10 @@ export const login = async (req, res) => {
       },
     });
   } catch (error) {
-    logger.error("Error al iniciar sesión", { message: error.message });
+    logger.error("Error logging in", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al iniciar sesión",
+      message: "Error logging in",
       payload: { error: error.message },
     });
   }
@@ -137,7 +137,7 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   return res.status(200).json({
     status: "success",
-    message: "Logout exitoso (token invalidado del lado cliente)",
+    message: "Logout successful (token should be invalidated client-side)",
     payload: null,
   });
 };
@@ -149,7 +149,7 @@ export const changePassword = async (req, res) => {
     if (!currentPassword || !newPassword) {
       return res.status(400).json({
         status: "error",
-        message: "Debe ingresar la contraseña actual y la nueva",
+        message: "You must provide the current and new password",
         payload: null,
       });
     }
@@ -160,7 +160,7 @@ export const changePassword = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({
         status: "error",
-        message: "Contraseña actual incorrecta",
+        message: "Current password is incorrect",
         payload: null,
       });
     }
@@ -168,7 +168,7 @@ export const changePassword = async (req, res) => {
     if (newPassword.length < 6) {
       return res.status(400).json({
         status: "error",
-        message: "La nueva contraseña debe tener al menos 6 caracteres",
+        message: "New password must be at least 6 characters long",
         payload: null,
       });
     }
@@ -178,14 +178,14 @@ export const changePassword = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: "Contraseña actualizada correctamente",
+      message: "Password updated successfully",
       payload: null,
     });
   } catch (error) {
-    logger.error("Error al cambiar la contraseña", { message: error.message });
+    logger.error("Error changing password", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al cambiar la contraseña",
+      message: "Error changing password",
       payload: { error: error.message },
     });
   }

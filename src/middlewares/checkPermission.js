@@ -6,7 +6,7 @@ const checkPermission = (requiredPermission) => {
       if (!req.user) {
         return res.status(401).json({
           status: "error",
-          message: "Usuario no autenticado",
+          message: "User not authenticated",
           payload: null,
         });
       }
@@ -25,17 +25,17 @@ const checkPermission = (requiredPermission) => {
       if (!hasPermission) {
         return res.status(403).json({
           status: "error",
-          message: `No tienes permiso para realizar esta acción. Se requiere: ${requiredPermission}`,
+          message: `You do not have permission to perform this action. Required permission: ${requiredPermission}`,
           payload: null,
         });
       }
 
       next();
     } catch (error) {
-      logger.error("Error al verificar permisos", { message: error.message });
+      logger.error("Error checking permissions", { message: error.message });
       return res.status(500).json({
         status: "error",
-        message: "Error al verificar permisos",
+        message: "Error checking permissions",
         payload: { error: error.message },
       });
     }

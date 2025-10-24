@@ -7,14 +7,14 @@ export const getPermissions = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: "Permisos obtenidos correctamente",
+      message: "Permissions fetched successfully",
       payload: { permissions },
     });
   } catch (error) {
-    logger.error("Error al obtener permisos", { message: error.message });
+    logger.error("Error fetching permissions", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al obtener permisos",
+      message: "Error fetching permissions",
       payload: { error: error.message },
     });
   }
@@ -27,21 +27,21 @@ export const getPermissionById = async (req, res) => {
     if (!permission) {
       return res.status(404).json({
         status: "error",
-        message: "Permiso no encontrado",
+        message: "Permission not found",
         payload: null,
       });
     }
 
     return res.status(200).json({
       status: "success",
-      message: "Permiso obtenido correctamente",
+      message: "Permission fetched successfully",
       payload: { permission },
     });
   } catch (error) {
-    logger.error("Error al obtener permiso", { message: error.message });
+    logger.error("Error fetching permission", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al obtener permiso",
+      message: "Error fetching permission",
       payload: { error: error.message },
     });
   }
@@ -54,7 +54,7 @@ export const createPermission = async (req, res) => {
     if (!name || !description) {
       return res.status(400).json({
         status: "error",
-        message: "Nombre y descripción son obligatorios",
+        message: "Name and description are required",
         payload: null,
       });
     }
@@ -64,7 +64,7 @@ export const createPermission = async (req, res) => {
     if (existingPermission) {
       return res.status(400).json({
         status: "error",
-        message: "El permiso ya existe",
+        message: "Permission already exists",
         payload: null,
       });
     }
@@ -73,14 +73,14 @@ export const createPermission = async (req, res) => {
 
     return res.status(201).json({
       status: "success",
-      message: "Permiso creado exitosamente",
+      message: "Permission created successfully",
       payload: { permission },
     });
   } catch (error) {
-    logger.error("Error al crear permiso", { message: error.message });
+    logger.error("Error creating permission", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al crear permiso",
+      message: "Error creating permission",
       payload: { error: error.message },
     });
   }
@@ -93,7 +93,7 @@ export const updatePermission = async (req, res) => {
     if (name !== undefined && name.trim() === "") {
       return res.status(400).json({
         status: "error",
-        message: "El nombre del permiso no puede estar vacío",
+        message: "Permission name cannot be empty",
         payload: null,
       });
     }
@@ -101,7 +101,7 @@ export const updatePermission = async (req, res) => {
     if (description !== undefined && description.trim() === "") {
       return res.status(400).json({
         status: "error",
-        message: "La descripción no puede estar vacía",
+        message: "Description cannot be empty",
         payload: null,
       });
     }
@@ -110,7 +110,7 @@ export const updatePermission = async (req, res) => {
     if (!permission) {
       return res.status(404).json({
         status: "error",
-        message: "Permiso no encontrado",
+        message: "Permission not found",
         payload: null,
       });
     }
@@ -120,7 +120,7 @@ export const updatePermission = async (req, res) => {
       if (existingPermission) {
         return res.status(400).json({
           status: "error",
-          message: "Ya existe un permiso con ese nombre",
+          message: "A permission with that name already exists",
           payload: null,
         });
       }
@@ -133,14 +133,14 @@ export const updatePermission = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: "Permiso actualizado correctamente",
+      message: "Permission updated successfully",
       payload: { permission },
     });
   } catch (error) {
-    logger.error("Error al actualizar permiso", { message: error.message });
+    logger.error("Error updating permission", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al actualizar permiso",
+      message: "Error updating permission",
       payload: { error: error.message },
     });
   }
@@ -153,21 +153,21 @@ export const deletePermission = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({
         status: "error",
-        message: "Permiso no encontrado",
+        message: "Permission not found",
         payload: null,
       });
     }
 
     return res.status(200).json({
       status: "success",
-      message: "Permiso eliminado correctamente",
+      message: "Permission deleted successfully",
       payload: null,
     });
   } catch (error) {
-    logger.error("Error al eliminar permiso", { message: error.message });
+    logger.error("Error deleting permission", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al eliminar permiso",
+      message: "Error deleting permission",
       payload: { error: error.message },
     });
   }

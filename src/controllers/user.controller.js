@@ -11,21 +11,21 @@ export const getMyProfile = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: "error",
-        message: "Usuario no encontrado",
+        message: "User not found",
         payload: null,
       });
     }
 
     return res.status(200).json({
       status: "success",
-      message: "Perfil obtenido correctamente",
+      message: "Profile fetched successfully",
       payload: { user },
     });
   } catch (error) {
-    logger.error("Error al obtener perfil", { message: error.message });
+    logger.error("Error fetching profile", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al obtener perfil",
+      message: "Error fetching profile",
       payload: { error: error.message },
     });
   }
@@ -39,14 +39,14 @@ export const getUsers = async (req, res) => {
     });
     return res.status(200).json({
       status: "success",
-      message: "Usuarios obtenidos correctamente",
+      message: "Users fetched successfully",
       payload: { users },
     });
   } catch (error) {
-    logger.error("Error al obtener usuarios", { message: error.message });
+    logger.error("Error fetching users", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al obtener usuarios",
+      message: "Error fetching users",
       payload: { error: error.message },
     });
   }
@@ -61,21 +61,21 @@ export const getUserById = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: "error",
-        message: "Usuario no encontrado",
+        message: "User not found",
         payload: null,
       });
     }
 
     return res.status(200).json({
       status: "success",
-      message: "Usuario obtenido correctamente",
+      message: "User fetched successfully",
       payload: { user },
     });
   } catch (error) {
-    logger.error("Error al obtener usuario", { message: error.message });
+    logger.error("Error fetching user", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al obtener usuario",
+      message: "Error fetching user",
       payload: { error: error.message },
     });
   }
@@ -88,7 +88,7 @@ export const updateUser = async (req, res) => {
     if (username !== undefined && username.trim() === "") {
       return res.status(400).json({
         status: "error",
-        message: "El nombre de usuario no puede estar vacío",
+        message: "Username cannot be empty",
       });
     }
 
@@ -96,7 +96,7 @@ export const updateUser = async (req, res) => {
       if (email.trim() === "") {
         return res.status(400).json({
           status: "error",
-          message: "El email no puede estar vacío",
+          message: "Email cannot be empty",
         });
       }
 
@@ -104,7 +104,7 @@ export const updateUser = async (req, res) => {
       if (!emailRegex.test(email)) {
         return res.status(400).json({
           status: "error",
-          message: "Formato de email inválido",
+          message: "Invalid email format",
         });
       }
 
@@ -112,7 +112,7 @@ export const updateUser = async (req, res) => {
       if (existingUser && existingUser._id.toString() !== req.params.id) {
         return res.status(400).json({
           status: "error",
-          message: "El email ya está registrado",
+          message: "Email is already registered",
         });
       }
     }
@@ -121,7 +121,7 @@ export const updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: "error",
-        message: "Usuario no encontrado",
+        message: "User not found",
       });
     }
 
@@ -133,14 +133,14 @@ export const updateUser = async (req, res) => {
 
     res.status(200).json({
       status: "success",
-      message: "Usuario actualizado correctamente",
+      message: "User updated successfully",
       payload: user,
     });
   } catch (err) {
-    logger.error("Error al actualizar usuario", { message: err.message });
+    logger.error("Error updating user", { message: err.message });
     res.status(500).json({
       status: "error",
-      message: "Error al actualizar usuario",
+      message: "Error updating user",
       error: err.message,
     });
   }
@@ -152,21 +152,21 @@ export const deleteUser = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({
         status: "error",
-        message: "Usuario no encontrado",
+        message: "User not found",
         payload: null,
       });
     }
 
     return res.status(200).json({
       status: "success",
-      message: "Usuario eliminado correctamente",
+      message: "User deleted successfully",
       payload: null,
     });
   } catch (error) {
-    logger.error("Error al eliminar usuario", { message: error.message });
+    logger.error("Error deleting user", { message: error.message });
     res.status(500).json({
       status: "error",
-      message: "Error al eliminar usuario",
+      message: "Error deleting user",
       payload: { error: error.message },
     });
   }
@@ -179,7 +179,7 @@ export const updateUserRole = async (req, res) => {
     if (!roleName) {
       return res.status(400).json({
         status: "error",
-        message: "El campo 'roleName' es obligatorio",
+        message: "The 'roleName' field is required",
         payload: null,
       });
     }
@@ -188,7 +188,7 @@ export const updateUserRole = async (req, res) => {
     if (!role) {
       return res.status(404).json({
         status: "error",
-        message: `El rol '${roleName}' no existe`,
+        message: `The role '${roleName}' does not exist`,
         payload: null,
       });
     }
@@ -197,7 +197,7 @@ export const updateUserRole = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         status: "error",
-        message: "Usuario no encontrado",
+        message: "User not found",
         payload: null,
       });
     }
@@ -208,16 +208,16 @@ export const updateUserRole = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
-      message: `Rol actualizado a '${role.name}' correctamente`,
+      message: `Role updated to '${role.name}' successfully`,
       payload: { user },
     });
   } catch (error) {
-    logger.error("Error al actualizar el rol del usuario", {
+    logger.error("Error updating user role", {
       message: error.message,
     });
     res.status(500).json({
       status: "error",
-      message: "Error al actualizar el rol del usuario",
+      message: "Error updating user role",
       payload: { error: error.message },
     });
   }
