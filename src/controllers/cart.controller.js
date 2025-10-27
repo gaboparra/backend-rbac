@@ -193,6 +193,18 @@ export const removeFromCart = async (req, res) => {
       });
     }
 
+    const itemExists = cart.items.some(
+      (item) => item.product.toString() === productId
+    );
+
+    if (!itemExists) {
+      return res.status(404).json({
+        status: "error",
+        message: "Product not found in cart",
+        payload: null,
+      });
+    }
+
     cart.items = cart.items.filter(
       (item) => item.product.toString() !== productId
     );
