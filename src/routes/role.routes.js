@@ -14,8 +14,8 @@ import checkPermission from "../middlewares/checkPermission.js";
 const router = Router();
 
 router.get("/", authorization, checkPermission("roles:read"), getRoles);
-router.get("/:id", authorization, checkPermission("roles:read"), getRoleById);
 router.post("/", authorization, checkPermission("roles:create"), createRole);
+router.get("/:id", authorization, checkPermission("roles:read"), getRoleById);
 router.put("/:id", authorization, checkPermission("roles:update"), updateRole);
 router.delete("/:id", authorization, checkPermission("roles:delete"), deleteRole);
 
