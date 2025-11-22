@@ -1,80 +1,61 @@
-import Order from "../models/Order.js";
+import {
+  checkoutService,
+  getMyOrdersService,
+  getOrderByIdService,
+  getAllOrdersService,
+} from "../services/order.service.js";
 import logger from "../config/logger.js";
+
+export const checkout = async (req, res) => {
+  try {
+    const order = await checkoutService(req.user._id);
+
+    return res.status(201).json({ order });
+  } catch (error) {
+    logger.error("Error during checkout:", error);
+    const status = error.status || 500;
+    res.status(status).json({
+      error: error.message || "Error during checkout",
+    });
+  }
+};
 
 export const getMyOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user._id })
-      .populate("items.product")
-      .sort({ createdAt: -1 }); // Más recientes primero
+    const orders = await getMyOrdersService(req.user._id);
 
-    return res.status(200).json({
-      status: "success",
-      message: "Historial de compras obtenido correctamente",
-      payload: { orders },
-    });
+    return res.status(200).json({ orders });
   } catch (error) {
-    logger.error("Error al obtener historial:", error);
+    logger.error("Error fetching orders:", error);
     res.status(500).json({
-      status: "error",
-      message: "Error al obtener historial de compras",
-      payload: { error: error.message },
+      error: "Error fetching orders",
     });
   }
 };
 
 export const getOrderById = async (req, res) => {
   try {
-    const order = await Order.findById(req.params.id).populate("items.product");
+    const order = await getOrderByIdService(req.params.id, req.user._id);
 
-    if (!order) {
-      return res.status(404).json({
-        status: "error",
-        message: "Orden no encontrada",
-        payload: null,
-      });
-    }
-
-    if (order.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({
-        status: "error",
-        message: "No tienes permiso para ver esta orden",
-        payload: null,
-      });
-    }
-
-    return res.status(200).json({
-      status: "success",
-      message: "Orden obtenida correctamente",
-      payload: { order },
-    });
+    return res.status(200).json({ order });
   } catch (error) {
-    logger.error("Error al obtener orden:", error);
-    res.status(500).json({
-      status: "error",
-      message: "Error al obtener orden",
-      payload: { error: error.message },
+    logger.error("Error fetching order:", error);
+    const status = error.status || 500;
+    res.status(status).json({
+      error: error.message || "Error fetching order",
     });
   }
 };
 
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find()
-      .populate("user", "username email")
-      .populate("items.product")
-      .sort({ createdAt: -1 });
+    const orders = await getAllOrdersService();
 
-    return res.status(200).json({
-      status: "success",
-      message: "Órdenes obtenidas correctamente",
-      payload: { orders },
-    });
+    return res.status(200).json({ orders });
   } catch (error) {
-    logger.error("Error al obtener órdenes:", error);
+    logger.error("Error fetching all orders:", error);
     res.status(500).json({
-      status: "error",
-      message: "Error al obtener órdenes",
-      payload: { error: error.message },
+      error: "Error fetching orders",
     });
   }
 };

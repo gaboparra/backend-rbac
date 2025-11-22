@@ -1,48 +1,35 @@
-import Permission from "../models/Permission.js";
+import {
+  getPermissionsService,
+  getPermissionByIdService,
+  createPermissionService,
+  updatePermissionService,
+  deletePermissionService,
+} from "../services/permission.service.js";
 import logger from "../config/logger.js";
 
 export const getPermissions = async (req, res) => {
   try {
-    const permissions = await Permission.find();
+    const permissions = await getPermissionsService();
 
-    return res.status(200).json({
-      status: "success",
-      message: "Permissions fetched successfully",
-      payload: { permissions },
-    });
+    return res.status(200).json({ permissions });
   } catch (error) {
-    logger.error("Error fetching permissions", { message: error.message });
+    logger.error("Error fetching permissions:", error);
     res.status(500).json({
-      status: "error",
-      message: "Error fetching permissions",
-      payload: { error: error.message },
+      error: "Error fetching permissions",
     });
   }
 };
 
 export const getPermissionById = async (req, res) => {
   try {
-    const permission = await Permission.findById(req.params.id);
+    const permission = await getPermissionByIdService(req.params.id);
 
-    if (!permission) {
-      return res.status(404).json({
-        status: "error",
-        message: "Permission not found",
-        payload: null,
-      });
-    }
-
-    return res.status(200).json({
-      status: "success",
-      message: "Permission fetched successfully",
-      payload: { permission },
-    });
+    return res.status(200).json({ permission });
   } catch (error) {
-    logger.error("Error fetching permission", { message: error.message });
-    res.status(500).json({
-      status: "error",
-      message: "Error fetching permission",
-      payload: { error: error.message },
+    logger.error("Error fetching permission:", error);
+    const status = error.status || 500;
+    res.status(status).json({
+      error: error.message || "Error fetching permission",
     });
   }
 };
@@ -53,35 +40,18 @@ export const createPermission = async (req, res) => {
 
     if (!name || !description) {
       return res.status(400).json({
-        status: "error",
-        message: "Name and description are required",
-        payload: null,
+        error: "Name and description are required",
       });
     }
 
-    const existingPermission = await Permission.findOne({ name });
+    const permission = await createPermissionService({ name, description });
 
-    if (existingPermission) {
-      return res.status(400).json({
-        status: "error",
-        message: "Permission already exists",
-        payload: null,
-      });
-    }
-
-    const permission = await Permission.create({ name, description });
-
-    return res.status(201).json({
-      status: "success",
-      message: "Permission created successfully",
-      payload: { permission },
-    });
+    return res.status(201).json({ permission });
   } catch (error) {
-    logger.error("Error creating permission", { message: error.message });
-    res.status(500).json({
-      status: "error",
-      message: "Error creating permission",
-      payload: { error: error.message },
+    logger.error("Error creating permission:", error);
+    const status = error.status || 500;
+    res.status(status).json({
+      error: error.message || "Error creating permission",
     });
   }
 };
@@ -92,83 +62,43 @@ export const updatePermission = async (req, res) => {
 
     if (name !== undefined && name.trim() === "") {
       return res.status(400).json({
-        status: "error",
-        message: "Permission name cannot be empty",
-        payload: null,
+        error: "Permission name cannot be empty",
       });
     }
 
     if (description !== undefined && description.trim() === "") {
       return res.status(400).json({
-        status: "error",
-        message: "Description cannot be empty",
-        payload: null,
+        error: "Description cannot be empty",
       });
     }
 
-    const permission = await Permission.findById(req.params.id);
-    if (!permission) {
-      return res.status(404).json({
-        status: "error",
-        message: "Permission not found",
-        payload: null,
-      });
-    }
-
-    if (name && name !== permission.name) {
-      const existingPermission = await Permission.findOne({ name });
-      if (existingPermission) {
-        return res.status(400).json({
-          status: "error",
-          message: "A permission with that name already exists",
-          payload: null,
-        });
-      }
-    }
-
-    if (name) permission.name = name;
-    if (description) permission.description = description;
-
-    await permission.save();
-
-    return res.status(200).json({
-      status: "success",
-      message: "Permission updated successfully",
-      payload: { permission },
+    const permission = await updatePermissionService(req.params.id, {
+      name,
+      description,
     });
+
+    return res.status(200).json({ permission });
   } catch (error) {
-    logger.error("Error updating permission", { message: error.message });
-    res.status(500).json({
-      status: "error",
-      message: "Error updating permission",
-      payload: { error: error.message },
+    logger.error("Error updating permission:", error);
+    const status = error.status || 500;
+    res.status(status).json({
+      error: error.message || "Error updating permission",
     });
   }
 };
 
 export const deletePermission = async (req, res) => {
   try {
-    const deleted = await Permission.findByIdAndDelete(req.params.id);
-
-    if (!deleted) {
-      return res.status(404).json({
-        status: "error",
-        message: "Permission not found",
-        payload: null,
-      });
-    }
+    await deletePermissionService(req.params.id);
 
     return res.status(200).json({
-      status: "success",
       message: "Permission deleted successfully",
-      payload: null,
     });
   } catch (error) {
-    logger.error("Error deleting permission", { message: error.message });
-    res.status(500).json({
-      status: "error",
-      message: "Error deleting permission",
-      payload: { error: error.message },
+    logger.error("Error deleting permission:", error);
+    const status = error.status || 500;
+    res.status(status).json({
+      error: error.message || "Error deleting permission",
     });
   }
 };
